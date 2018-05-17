@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------------
+Transformation from Row to coulmn level for Unemployment data
+------------------------------------------------------------------------------------
+require(xlsx)
+require(tidyr)
+library(dplyr)
+read_File <- read.xlsx("unemployment Index.xlsx",header=TRUE,sheetName = "Sheet1")
+read_File <- read_File %>% 
+gather(Year, Unemployment_rate, X2017:X2015)
+read_File$Year <- gsub('X',"",read_File$Year)
+
+write.csv(read_File,row.names=FALSE,quote =FALSE,'C:/Users/arjit Bhai/Desktop/DataWarehousing Project Files/unemployment_Index6.csv')
+
+----------------------------------------------------------------------------------------
+Transformation from Row to coulmn level for GDP data
+----------------------------------------------------------------------------------------
+
+require(xlsx)
+require(tidyr)
+library(dplyr)
+read_File <- read.xlsx("GDP.xlsx",header=TRUE,sheetName = "Sheet1")
+read_File <- read_File %>% 
+gather(Year, GDP_rate, X2017:X2015)
+read_File$Year <- gsub('X',"",read_File$Year)
+
+write.csv(read_File,row.names=FALSE,quote =FALSE,'C:/Users/arjit Bhai/Desktop/DataWarehousing Project Files/GDP.csv')
+
+
+

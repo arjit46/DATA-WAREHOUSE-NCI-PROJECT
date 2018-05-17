@@ -1,0 +1,180 @@
+Data Source : shanghairanking
+
+URL :: http://www.shanghairanking.com/ARWU2017.html 
+
+
+Code :---
+----
+library(htmltab)
+require(xlsx)
+require(tidyr)
+library(dplyr)
+url <- "http://www.shanghairanking.com/ARWU2017.html"
+Ranking <- htmltab(doc=url, which=1)
+Ranking <- Ranking[,c("World                 Rank","Institution*","National/Regional                 Rank")]
+write.xlsx(x = Ranking, file = "Ranking1.xlsx",
+sheetName = "TestSheet", row.names = FALSE)
+
+------------------------------------------------
+
+Data Source : bls.gov
+URL :: https://www.bls.gov/lau/lastch17.htm
+
+Code :--
+--
+library(htmltab)
+require(xlsx)
+require(tidyr)
+library(dplyr)
+url <- "https://www.bls.gov/lau/lastch17.htm"
+Unemployment<- htmltab(doc=url, which=2)
+
+Unemployment <- Unemployment[,c("State","2016rate","2017rate")]
+write.xlsx(x = Unemployment, file = "Unemployment.xlsx",
+sheetName = "TestSheet", row.names = FALSE)
+
+--------------------
+
+Data Source : Wiki
+URL :: https://en.wikipedia.org/wiki/List_of_U.S._states_by_GDP_per_capita
+
+Code :--
+--
+
+library(htmltab)
+require(xlsx)
+require(tidyr)
+library(dplyr)
+url <- "https://en.wikipedia.org/wiki/List_of_U.S._states_by_GDP_per_capita"
+GDP<- htmltab(doc=url, which=1)
+
+GDP <- GDP[,c("State","2017","2016","2015")]
+write.xlsx(x = GDP, file = "GDP.xlsx",
+sheetName = "TestSheet", row.names = FALSE)
+
+-------------------
+
+Data Source : Fortune 500
+URL <- http://fortune.com/fortune500/list
+
+Code :--
+--
+library('rvest')
+url <- "http://fortune.com/fortune500/list"
+webpage <- read_html(url)
+
+
+rank_data_html <- html_nodes(webpage,'.company-rank')
+rank_data <- html_text(rank_data_html)
+head(rank_data)
+
+Cmpy_data_html <- html_nodes(webpage,'.company-title')
+Cmpy_data <- html_text(Cmpy_data_html)
+head(Cmpy_data)
+
+
+Company.rank <- data.frame(rank_data, Cmpy_data)
+write.xlsx(x =Company.rank, file = "Company_rank.xlsx",
+           sheetName = "TestSheet", row.names = FALSE)
+
+--------------
+Twitter 
+--------------
+Twitter Code analyses
+
+library(twitteR)
+library(purrr)
+library(dplyr)
+require(RCurl)
+require(ROAuth)
+library(plyr)
+library(stringr)
+library(syuzhet)
+library(lubridate)
+library(ggplot2)
+library(scales)
+library(reshape2)
+library(dplyr)
+
+consumerKey <- 'JAfQ6TkRZwUyyREj1b7QXXaM6'
+reqURL <- 'https://api.twitter.com/oauth/request_token'
+accessURL <- 'https://api.twitter.com/oauth/access_token'
+authURL <- 'https://api.twitter.com/oauth/authorize'
+consumerSecret <- 'K1w4bMS5gN1KUmFGTIM3xExspqgZfN0xSb4H2QLH1AwCjpQu2C'
+accessToken <- '150181935-cSsr14mS6v2mXIiAKXri8AacX30yBSY8qUNuJD5S'
+accessTokenSecret <- 'u9txSIEVVWrRU3goFC8inWNdnmtFplQkv4jrfHrEDrlHk'
+
+twitCred <- OAuthFactory$new(consumerKey =consumerKey,
+                             consumerSecret=consumerSecret,
+                             requestURL= reqURL,
+                             accessURL =accessURL,
+                             authURL =authURL)
+twitCred$handshake()
+
+#live-streaming 
+setup_twitter_oauth(consumerKey,consumerSecret,accessToken,accessTokenSecret)
+#tweet<- userTimeline("@usimmigration0",n=2000)
+tweet_1 <-searchTwitter(c("immigration","US"), n=1000,lang='en')
+#tweet_df <- tbl_df(map_df(tweet,as.data.frame))
+tweet_df_1 <- tbl_df(map_df(tweet_1,as.data.frame))
+
+#making dataFrame
+#make_df <- data.frame(a=tweet_df$text)
+make_df_1 <- data.frame(a=tweet_df_1$text)
+#tweets <- iconv(make_df$a)
+
+
+#s<- get_nrc_sentiment(tweets)
+make_vec_1 <- as.vector(make_df_1$a)
+
+make_vec_1 <- gsub('[[:punct:]]'," ",make_vec_1)
+make_vec_1 <- gsub("[^[:alnum:]]"," ",make_vec_1)
+make_vec_1 <- gsub("rt","",make_vec_1)
+make_vec_1 <- gsub('[[:cntrl:]]'," ",make_vec_1)
+make_vec_1 <- gsub('\\d+',"",make_vec_1)
+make_vec_1 <- tolower(make_vec_1)
+
+# make_df_1$a <- gsub('[[:punct:]]',"",s_1$make_df_1$a)
+# make_df_1$a <- gsub('[[:cntrl:]]',"",s_1$make_df_1$a)
+# make_df_1$a <- gsub('\\d+',"",s_1$make_df_1$a)
+# make_df_1$a <- tolower(s_1$make_df_1$a)
+
+
+s_1<- get_nrc_sentiment(make_vec_1)
+
+#making data Frame
+#s$comments =tweets
+new_df <- data.frame(comment=make_vec_1)
+
+
+s_1$comments =new_df$comment
+
+
+
+
+write.csv(s_1,"data_final_sentimenal.csv")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
